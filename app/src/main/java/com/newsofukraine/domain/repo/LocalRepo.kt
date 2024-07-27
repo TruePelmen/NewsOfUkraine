@@ -6,5 +6,5 @@ interface LocalRepo {
 
     suspend fun getSavedNews(): List<News>
 
-    suspend fun getDeleteNews()
+    suspend fun getDeleteNews(news: News)
 }
