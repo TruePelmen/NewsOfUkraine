@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    kotlin("kapt")
 }
 
 android {
@@ -83,4 +84,19 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.6")
 
     implementation("io.coil-kt:coil-compose:1.3.2")
+
+
+
+
+    val koin_version = "3.5.3"
+    implementation("io.insert-koin:koin-android:$koin_version")
+    implementation("io.insert-koin:koin-core")
+    // Koin Test features
+    testImplementation("io.insert-koin:koin-test:$koin_version")
+    // Koin for JUnit 4
+    testImplementation("io.insert-koin:koin-test-junit4:$koin_version")
+    // Koin for JUnit 5
+    testImplementation("io.insert-koin:koin-test-junit5:$koin_version")
+
+    kapt("androidx.room:room-compiler:2.6.0")
 }

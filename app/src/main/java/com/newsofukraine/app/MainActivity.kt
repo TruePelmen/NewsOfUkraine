@@ -12,10 +12,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.newsofukraine.app.ui.theme.NewsofUkraineTheme
+import com.newsofukraine.di.appModule
+import com.newsofukraine.di.dataModule
+import com.newsofukraine.di.domainModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.startKoin
+import org.koin.android.ext.android.get
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        startKoin {
+            androidContext(application)
+            modules(listOf(appModule, domainModule, dataModule))
+        }
+
+        val viewModel: MainViewModel = get<MainViewModel>()
+
         enableEdgeToEdge()
         setContent {
             NewsofUkraineTheme {
