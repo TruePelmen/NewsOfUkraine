@@ -33,7 +33,7 @@ class MainViewModel(
             userIntent.consumeAsFlow().collect { collector ->
                 when (collector) {
                     is MainIntent.FetchNews -> fetchNews()
-                    is MainIntent.OpenNews -> openNews(collector.news)
+                    is MainIntent.OpenNews -> openNews(collector.news.url)
                     is MainIntent.SaveNews -> saveNews(collector.news)
                     is MainIntent.DeleteNews -> deleteNews(collector.news)
                     is MainIntent.ShowSavedNews -> showSavedNews()
@@ -54,7 +54,7 @@ class MainViewModel(
         }
     }
 
-    private fun openNews(news: News) {
+    private fun openNews(url: String) {
         TODO()
     }
 

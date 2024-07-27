@@ -17,10 +17,10 @@ class LocalRepoImplementation(private val newsDao: NewsDao): LocalRepo {
     }
 
     private fun NewsEntity.toDomain(): News {
-        return News(title, img, author, description)
+        return News(title, img, author, description, url)
     }
 
     private fun News.toEntity(): NewsEntity {
-        return NewsEntity(title, img, author, description)
+        return NewsEntity(title, img, author, description, url)
     }
 }
