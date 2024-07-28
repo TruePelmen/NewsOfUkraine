@@ -37,12 +37,18 @@ import org.koin.core.context.GlobalContext.startKoin
 import org.koin.android.ext.android.get
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
@@ -83,7 +89,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
 @Composable
 fun MainScreen(
     vm: MainViewModel,
@@ -119,19 +124,31 @@ fun LoadingScreen() {
 
 @Composable
 fun ErrorScreen(onButtonClick: () -> Unit) {
-    Text(text = "Something went wrong =(")
-    Button(onClick = onButtonClick ){
-        Text(text= "Retry")
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(text = "Something went wrong =(", style = MaterialTheme.typography.bodyLarge)
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(onClick = onButtonClick) {
+                Text(text = "Retry")
+            }
+        }
     }
 }
 
 @Composable
 fun NewsList(news: List<News>) {
-    LazyColumn {
-        items(items = news) {
-            NewsItem(news = it)
-            HorizontalDivider(
-                modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
+    LazyColumn(
+        modifier = Modifier.padding(8.dp)
+    ) {
+        items(items = news) { item ->
+            NewsItem(news = item)
+            Divider(
+                modifier = Modifier.padding(vertical = 8.dp),
                 color = Color.LightGray
             )
         }
@@ -143,21 +160,43 @@ fun NewsItem(news: News) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
+            .height(120.dp)
+            .padding(8.dp)
     ) {
         val painter = rememberImagePainter(data = news.urlToImage)
         Image(
             painter = painter,
             contentDescription = null,
-            modifier = Modifier.size(100.dp),
-            contentScale = ContentScale.FillHeight
+            modifier = Modifier
+                .size(100.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            contentScale = ContentScale.Crop
         )
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 4.dp)) {
-            Text(text = news.title ?: "Untitled", fontWeight = FontWeight.Bold)
-            Text(text = news.author ?: "Unknown Author")
-            Text(text = news.description ?: "No Description Available")
+        Spacer(modifier = Modifier.width(8.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(4.dp)
+        ) {
+            Text(
+                text = news.title ?: "Untitled",
+                fontWeight = FontWeight.Bold,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.titleSmall            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = news.author ?: "Unknown Author",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = news.description ?: "No Description Available",
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 }
