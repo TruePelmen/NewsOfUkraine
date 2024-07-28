@@ -99,4 +99,7 @@ dependencies {
     testImplementation("io.insert-koin:koin-test-junit5:$koin_version")
 
     kapt("androidx.room:room-compiler:2.6.0")
+
+
+    implementation("androidx.browser:browser:1.5.0")
 }

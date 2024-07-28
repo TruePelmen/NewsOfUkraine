@@ -1,12 +1,15 @@
 package com.newsofukraine.app
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,6 +53,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.lifecycleScope
+import com.newsofukraine.R
 import kotlinx.coroutines.launch
 
 
@@ -95,7 +99,13 @@ fun MainScreen(
     onRetryButtonClick: () -> Unit,
     modifier: Modifier
 ) {
+    val context = LocalContext.current
     val state by vm.state.collectAsState()
+
+    val onNewsClick: (String) -> Unit = { url ->
+        val customTabsIntent = CustomTabsIntent.Builder().build()
+        customTabsIntent.launchUrl(context, Uri.parse(url))
+    }
 
     when (state) {
         is MainState.Loading -> {
@@ -103,7 +113,7 @@ fun MainScreen(
             Log.d("API_or_UI_Debug", "LoadingScreen in mainActivity invoked")
         }
         is MainState.NewsList -> {
-            NewsList(news = (state as MainState.NewsList).news)
+            NewsList(news = (state as MainState.NewsList).news, onNewsClick = onNewsClick)
             Log.d("API_or_UI_Debug", "NewsList in mainActivity invoked")
         }
         is MainState.Error -> {
@@ -114,6 +124,7 @@ fun MainScreen(
         is MainState.SavedNewsList -> TODO()
     }
 }
+
 
 @Composable
 fun LoadingScreen() {
@@ -141,12 +152,12 @@ fun ErrorScreen(onButtonClick: () -> Unit) {
 }
 
 @Composable
-fun NewsList(news: List<News>) {
+fun NewsList(news: List<News>, onNewsClick: (String) -> Unit) {
     LazyColumn(
         modifier = Modifier.padding(8.dp)
     ) {
         items(items = news) { item ->
-            NewsItem(news = item)
+            NewsItem(news = item, onNewsClick = onNewsClick)
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 8.dp),
                 color = Color.LightGray
@@ -155,15 +166,24 @@ fun NewsList(news: List<News>) {
     }
 }
 
+
 @Composable
-fun NewsItem(news: News) {
+fun NewsItem(news: News, onNewsClick: (String) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(120.dp)
             .padding(8.dp)
+            .clickable { onNewsClick(news.url) }
     ) {
-        val painter = rememberImagePainter(data = news.urlToImage)
+        val painter = rememberImagePainter(
+            data = news.urlToImage,
+            builder = {
+                placeholder(R.drawable.empty)
+                error(R.drawable.empty)
+            }
+        )
+
         Image(
             painter = painter,
             contentDescription = null,
@@ -183,7 +203,8 @@ fun NewsItem(news: News) {
                 fontWeight = FontWeight.Bold,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.titleSmall            )
+                style = MaterialTheme.typography.titleSmall
+            )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = news.author ?: "Unknown Author",
