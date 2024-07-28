@@ -1,5 +1,6 @@
 package com.newsofukraine.app
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -46,6 +47,9 @@ class MainViewModel(
     private fun fetchNews() {
         viewModelScope.launch {
             _state.value = MainState.Loading
+
+            Log.d("API_or_UI_Debug", "fetchNews in viewModel invoked")
+
             try {
                 val newsList = fetchNewsUseCase.invoke()
                 _state.value = MainState.NewsList(newsList)

@@ -1,5 +1,6 @@
 package com.newsofukraine.data.remote
 
+import android.util.Log
 import com.newsofukraine.domain.model.News
 import com.newsofukraine.domain.repo.LocalRepo
 import com.newsofukraine.domain.repo.RemoteRepo
@@ -21,6 +22,8 @@ class RemoteRepoImplementation : RemoteRepo {
         val newsApiService = retrofit.create(NewsApiService::class.java)
 
         val response = newsApiService.getNews("ua", apiKey)
+
+        Log.d("API_or_UI_Debug", "getNews() in RemoteRepoImplementation worked")
 
         return if (response.isSuccessful && response.body() != null) {
             response.body()!!.articles

@@ -1,6 +1,7 @@
 package com.newsofukraine.app
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -85,11 +86,19 @@ fun MainScreen(
     modifier: Modifier
 ) {
     val state by vm.state.collectAsState()
+
     when (state) {
-        is MainState.Loading -> LoadingScreen()
-        is MainState.NewsList -> NewsList(news = (state as MainState.NewsList).news)
+        is MainState.Loading -> {
+            LoadingScreen()
+            Log.d("API_or_UI_Debug", "LoadingScreen in mainActivity invoked")
+        }
+        is MainState.NewsList -> {
+            NewsList(news = (state as MainState.NewsList).news)
+            Log.d("API_or_UI_Debug", "NewsList in mainActivity invoked")
+        }
         is MainState.Error -> {
             ErrorScreen(onRetryButtonClick)
+            Log.d("API_or_UI_Debug", "Error in mainActivity invoked")
             Toast.makeText(LocalContext.current, (state as MainState.Error).error, Toast.LENGTH_SHORT).show()
         }
         is MainState.SavedNewsList -> TODO()
