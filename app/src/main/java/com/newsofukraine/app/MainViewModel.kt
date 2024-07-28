@@ -35,7 +35,6 @@ class MainViewModel(
             userIntent.consumeAsFlow().collect { collector ->
                 when (collector) {
                     is MainIntent.FetchNews -> fetchNews()
-                    is MainIntent.OpenNews -> openNews(collector.news.url)
                     is MainIntent.SaveNews -> saveNews(collector.news)
                     is MainIntent.DeleteNews -> deleteNews(collector.news)
                     is MainIntent.ShowSavedNews -> showSavedNews()
@@ -62,11 +61,6 @@ class MainViewModel(
                 _state.value = MainState.Error(e.message ?: "Unknown error")
             }
         }
-    }
-
-
-    private fun openNews(url: String) {
-        TODO()
     }
 
     private fun saveNews(news: News) {
