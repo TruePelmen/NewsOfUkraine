@@ -23,9 +23,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -194,7 +198,7 @@ fun NewsList(news: List<News>, onNewsClick: (String) -> Unit) {
         modifier = Modifier.padding(8.dp)
     ) {
         items(items = news) { item ->
-            NewsItem(news = item, onNewsClick = onNewsClick)
+            NewsItem(news = item, onNewsClick = onNewsClick, {})
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 8.dp),
                 color = Color.LightGray
@@ -204,7 +208,7 @@ fun NewsList(news: List<News>, onNewsClick: (String) -> Unit) {
 }
 
 @Composable
-fun NewsItem(news: News, onNewsClick: (String) -> Unit) {
+fun NewsItem(news: News, onNewsClick: (String) -> Unit, onBookmarkClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -228,10 +232,12 @@ fun NewsItem(news: News, onNewsClick: (String) -> Unit) {
                 .clip(RoundedCornerShape(8.dp)),
             contentScale = ContentScale.Crop
         )
+
         Spacer(modifier = Modifier.width(8.dp))
+
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f) // to take remaining space
                 .padding(4.dp)
         ) {
             Text(
@@ -254,6 +260,15 @@ fun NewsItem(news: News, onNewsClick: (String) -> Unit) {
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium
             )
+        }
+
+        IconButton(
+            onClick = onBookmarkClick,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(16.dp)
+        ) {
+            Icon(Icons.Default.FavoriteBorder, contentDescription = "Bookmark")
         }
     }
 }
