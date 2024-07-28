@@ -145,7 +145,7 @@ fun NewsItem(news: News) {
             .fillMaxWidth()
             .height(100.dp)
     ) {
-        val painter = rememberImagePainter(data = news.img)
+        val painter = rememberImagePainter(data = news.urlToImage)
         Image(
             painter = painter,
             contentDescription = null,

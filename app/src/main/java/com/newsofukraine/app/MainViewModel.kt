@@ -52,6 +52,10 @@ class MainViewModel(
             try {
                 val newsList = fetchNewsUseCase.invoke()
                 Log.d("API_or_UI_Debug", "fetchNewsUseCase returned news list: ${newsList.size} items")
+                for(i in newsList) {
+                    Log.d("API_or_UI_Debug", "Element in list: url = ${i.url}, img = ${i.urlToImage}, author = ${i.author}, title = ${i.title}, description = ${i.description}")
+                }
+
                 _state.value = MainState.NewsList(newsList)
             } catch (e: Exception) {
                 Log.e("API_or_UI_Debug", "fetchNewsUseCase threw exception: ${e.message}")
