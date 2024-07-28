@@ -64,6 +64,10 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        lifecycleScope.launch {
+            viewModel.userIntent.send(MainIntent.FetchNews)
+        }
+
         enableEdgeToEdge()
         setContent {
             NewsofUkraineTheme {
@@ -78,6 +82,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 @Composable
 fun MainScreen(
@@ -150,9 +155,9 @@ fun NewsItem(news: News) {
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(start = 4.dp)) {
-            Text(text = news.title, fontWeight = FontWeight.Bold)
-            Text(text = news.author)
-            Text(text = news.description)
+            Text(text = news.title ?: "Untitled", fontWeight = FontWeight.Bold)
+            Text(text = news.author ?: "Unknown Author")
+            Text(text = news.description ?: "No Description Available")
         }
     }
 }

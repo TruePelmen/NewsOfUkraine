@@ -18,18 +18,21 @@ class RemoteRepoImplementation : RemoteRepo {
         .build()
 
     override suspend fun getNews(): List<News> {
+        Log.d("API_or_UI_Debug", "getNews in RemoteRepoImplementation invoked")
         val retrofit = getRetrofit()
         val newsApiService = retrofit.create(NewsApiService::class.java)
 
         val response = newsApiService.getNews("ua", apiKey)
-
-        Log.d("API_or_UI_Debug", "getNews() in RemoteRepoImplementation worked")
+        Log.d("API_or_UI_Debug", "API response received")
 
         return if (response.isSuccessful && response.body() != null) {
+            Log.d("API_or_UI_Debug", "API response successful with ${response.body()!!.articles.size} articles")
             response.body()!!.articles
         } else {
+            Log.e("API_or_UI_Debug", "API response failed with error: ${response.errorBody()?.string()}")
             emptyList()
         }
     }
 }
+
 

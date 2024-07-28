@@ -47,17 +47,19 @@ class MainViewModel(
     private fun fetchNews() {
         viewModelScope.launch {
             _state.value = MainState.Loading
-
             Log.d("API_or_UI_Debug", "fetchNews in viewModel invoked")
 
             try {
                 val newsList = fetchNewsUseCase.invoke()
+                Log.d("API_or_UI_Debug", "fetchNewsUseCase returned news list: ${newsList.size} items")
                 _state.value = MainState.NewsList(newsList)
             } catch (e: Exception) {
+                Log.e("API_or_UI_Debug", "fetchNewsUseCase threw exception: ${e.message}")
                 _state.value = MainState.Error(e.message ?: "Unknown error")
             }
         }
     }
+
 
     private fun openNews(url: String) {
         TODO()
