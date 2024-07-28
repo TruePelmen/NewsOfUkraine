@@ -147,7 +147,7 @@ fun NewsList(news: List<News>) {
     ) {
         items(items = news) { item ->
             NewsItem(news = item)
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.padding(vertical = 8.dp),
                 color = Color.LightGray
             )

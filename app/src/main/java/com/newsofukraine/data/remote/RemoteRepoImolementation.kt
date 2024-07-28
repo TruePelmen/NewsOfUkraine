@@ -25,14 +25,34 @@ class RemoteRepoImplementation : RemoteRepo {
         val response = newsApiService.getNews("ua", apiKey)
         Log.d("API_or_UI_Debug", "API response received")
 
-        return if (response.isSuccessful && response.body() != null) {
-            Log.d("API_or_UI_Debug", "API response successful with ${response.body()!!.articles.size} articles")
-            response.body()!!.articles
+        if (response.isSuccessful && response.body() != null) {
+            val newsList = response.body()!!.articles
+            Log.d("API_Response_Debug", response.body().toString())
+            newsList.forEachIndexed { index, article ->
+                Log.d("API_Response_Debug", "Article item $index: ${article.urlToImage}")
+            }
+            val returnList: MutableList<News> = mutableListOf()
+            newsList.forEach {
+                returnList.add(
+                    News(
+                        title = it.title,
+                        urlToImage = it.urlToImage ?: "",
+                        author = it.author ?: "Unknown",
+                        description = it.description ?: "",
+                        url = it.url
+                    )
+                )
+            }
+            return returnList
         } else {
-            Log.e("API_or_UI_Debug", "API response failed with error: ${response.errorBody()?.string()}")
-            emptyList()
+            Log.e(
+                "API_or_UI_Debug",
+                "API response failed with error: ${response.errorBody()?.string()}"
+            )
+            return emptyList()
         }
     }
 }
+
 
 
