@@ -37,6 +37,10 @@ import org.koin.android.ext.android.get
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -62,10 +66,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NewsofUkraineTheme {
-                MainScreen(
-                    viewModel,
-                    onRetryButtonClick,
-                    Modifier.fillMaxSize())
+                Surface(color = MaterialTheme.colorScheme.background){
+                    MainScreen(
+                        viewModel,
+                        onRetryButtonClick,
+                        Modifier.fillMaxSize()
+                    )
+                }
             }
         }
     }
@@ -75,14 +82,15 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(
     vm: MainViewModel,
     onRetryButtonClick: () -> Unit,
-    modifier: Modifier) {
-    val state = vm.state.value
-    when (val state = vm.state.value) {
+    modifier: Modifier
+) {
+    val state by vm.state.collectAsState()
+    when (state) {
         is MainState.Loading -> LoadingScreen()
-        is MainState.NewsList -> NewsList(news = state.news)
+        is MainState.NewsList -> NewsList(news = (state as MainState.NewsList).news)
         is MainState.Error -> {
             ErrorScreen(onRetryButtonClick)
-            Toast.makeText(LocalContext.current, state.error, Toast.LENGTH_SHORT).show()
+            Toast.makeText(LocalContext.current, (state as MainState.Error).error, Toast.LENGTH_SHORT).show()
         }
         is MainState.SavedNewsList -> TODO()
     }
