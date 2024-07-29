@@ -161,7 +161,7 @@ fun MainScreen(
             }
 
             is MainState.SavedNewsList -> {
-                NewsList(news = (state as MainState.SavedNewsList).news, onNewsClick = onNewsClick)
+                SavedNewsList(news = (state as MainState.SavedNewsList).news, onNewsClick = onNewsClick)
             }
 
             is MainState.SearchedNewsList -> {
@@ -273,6 +273,21 @@ fun NewsItem(news: News, onNewsClick: (String) -> Unit, onBookmarkClick: () -> U
                 .padding(16.dp)
         ) {
             Icon(Icons.Default.FavoriteBorder, contentDescription = "Bookmark")
+        }
+    }
+}
+
+@Composable
+fun SavedNewsList(news: List<News>, onNewsClick: (String) -> Unit) {
+    LazyColumn(
+        modifier = Modifier.padding(8.dp)
+    ) {
+        items(items = news) { item ->
+            NewsItem(news = item, onNewsClick = onNewsClick, {})
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp),
+                color = Color.LightGray
+            )
         }
     }
 }
