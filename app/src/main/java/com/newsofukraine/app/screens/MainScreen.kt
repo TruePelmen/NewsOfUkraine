@@ -17,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewModelScope
-import com.newsofukraine.ErrorScreen
 import com.newsofukraine.app.main.MainIntent
 import com.newsofukraine.app.main.MainState
 import com.newsofukraine.app.main.MainViewModel
