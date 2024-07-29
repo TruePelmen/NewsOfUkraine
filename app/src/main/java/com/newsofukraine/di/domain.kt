@@ -3,6 +3,7 @@ package com.newsofukraine.di
 import com.newsofukraine.domain.usecase.DeleteNewsUseCase
 import com.newsofukraine.domain.usecase.FetchNewsUseCase
 import com.newsofukraine.domain.usecase.SaveNewsUseCase
+import com.newsofukraine.domain.usecase.SearchNewsUseCase
 import com.newsofukraine.domain.usecase.ShowSavedNewsUseCase
 import org.koin.dsl.module
 
@@ -21,5 +22,9 @@ val domainModule = module{
 
     factory <SaveNewsUseCase> {
         SaveNewsUseCase(get())
+    }
+
+    factory <SearchNewsUseCase> {
+        SearchNewsUseCase(get())
     }
 }

@@ -8,6 +8,7 @@ import com.newsofukraine.domain.model.News
 import com.newsofukraine.domain.usecase.DeleteNewsUseCase
 import com.newsofukraine.domain.usecase.FetchNewsUseCase
 import com.newsofukraine.domain.usecase.SaveNewsUseCase
+import com.newsofukraine.domain.usecase.SearchNewsUseCase
 import com.newsofukraine.domain.usecase.ShowSavedNewsUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,8 @@ class MainViewModel(
     private val deleteNewsUseCase: DeleteNewsUseCase,
     private val fetchNewsUseCase: FetchNewsUseCase,
     private val saveNewsUseCase: SaveNewsUseCase,
-    private val showSavedNewsUseCase: ShowSavedNewsUseCase
+    private val showSavedNewsUseCase: ShowSavedNewsUseCase,
+    private val searchNewsUseCase: SearchNewsUseCase
 ): ViewModel() {
 
     val userIntent = Channel<MainIntent>(Channel.UNLIMITED)
@@ -38,7 +40,20 @@ class MainViewModel(
                     is MainIntent.SaveNews -> saveNews(collector.news)
                     is MainIntent.DeleteNews -> deleteNews(collector.news)
                     is MainIntent.ShowSavedNews -> showSavedNews()
+                    is MainIntent.SearchNews -> searchNews(collector.query)
                 }
+            }
+        }
+    }
+
+    private fun searchNews(query: String) {
+        viewModelScope.launch {
+            _state.value = MainState.Loading
+            try {
+                val newsList = searchNewsUseCase.invoke(query)
+                _state.value = MainState.NewsList(newsList)
+            } catch (e: Exception) {
+                _state.value = MainState.Error(e.message ?: "Unknown error")
             }
         }
     }
