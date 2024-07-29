@@ -144,17 +144,14 @@ fun MainScreen(
         when (state) {
             is MainState.Loading -> {
                 LoadingScreen()
-                Log.d("API_or_UI_Debug", "LoadingScreen in mainActivity invoked")
             }
 
             is MainState.NewsList -> {
                 NewsList(news = (state as MainState.NewsList).news, onNewsClick = onNewsClick, vm)
-                Log.d("API_or_UI_Debug", "NewsList in mainActivity invoked")
             }
 
             is MainState.Error -> {
                 ErrorScreen(onRetryButtonClick)
-                Log.d("API_or_UI_Debug", "Error in mainActivity invoked")
                 Toast.makeText(
                     LocalContext.current,
                     (state as MainState.Error).error,

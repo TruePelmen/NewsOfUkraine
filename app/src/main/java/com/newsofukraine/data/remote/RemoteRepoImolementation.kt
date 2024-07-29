@@ -18,19 +18,13 @@ class RemoteRepoImplementation : RemoteRepo {
         .build()
 
     override suspend fun getNews(): List<News> {
-        Log.d("API_or_UI_Debug", "getNews in RemoteRepoImplementation invoked")
         val retrofit = getRetrofit()
         val newsApiService = retrofit.create(NewsApiService::class.java)
 
         val response = newsApiService.getNews(country = "ua", apiKey = apiKey)
-        Log.d("API_or_UI_Debug", "API response received")
 
         if (response.isSuccessful && response.body() != null) {
             val newsList = response.body()!!.articles
-            Log.d("API_Response_Debug", response.body().toString())
-            newsList.forEachIndexed { index, article ->
-                Log.d("API_Response_Debug", "Article item $index: ${article.urlToImage}")
-            }
             val returnList: MutableList<News> = mutableListOf()
             newsList.forEach {
                 returnList.add(
