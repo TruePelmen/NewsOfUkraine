@@ -35,10 +35,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -146,7 +148,7 @@ fun MainScreen(
             }
 
             is MainState.NewsList -> {
-                NewsList(news = (state as MainState.NewsList).news, onNewsClick = onNewsClick)
+                NewsList(news = (state as MainState.NewsList).news, onNewsClick = onNewsClick, vm)
                 Log.d("API_or_UI_Debug", "NewsList in mainActivity invoked")
             }
 
@@ -161,11 +163,18 @@ fun MainScreen(
             }
 
             is MainState.SavedNewsList -> {
-                SavedNewsList(news = (state as MainState.SavedNewsList).news, onNewsClick = onNewsClick)
+                SavedNewsList(
+                    news = (state as MainState.SavedNewsList).news,
+                    onNewsClick = onNewsClick
+                )
             }
 
             is MainState.SearchedNewsList -> {
-                NewsList(news = (state as MainState.SearchedNewsList).news, onNewsClick = onNewsClick)
+                NewsList(
+                    news = (state as MainState.SearchedNewsList).news,
+                    onNewsClick = onNewsClick,
+                    vm = vm
+                )
             }
         }
     }
@@ -197,19 +206,36 @@ fun ErrorScreen(onButtonClick: () -> Unit) {
 }
 
 @Composable
-fun NewsList(news: List<News>, onNewsClick: (String) -> Unit) {
-    LazyColumn(
-        modifier = Modifier.padding(8.dp)
-    ) {
-        items(items = news) { item ->
-            NewsItem(news = item, onNewsClick = onNewsClick, {})
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = 8.dp),
-                color = Color.LightGray
-            )
+fun NewsList(news: List<News>, onNewsClick: (String) -> Unit, vm: MainViewModel) {
+    var searchQuery by remember { mutableStateOf("") }
+
+    Column {
+        SearchBar(
+            query = searchQuery,
+            onQueryChange = { newQuery -> searchQuery = newQuery },
+            onSearch = {
+                vm.viewModelScope.launch {
+                    vm.userIntent.send(MainIntent.SearchNews(searchQuery))
+                }
+            }
+        )
+        LazyColumn(
+            modifier = Modifier.padding(8.dp)
+        ) {
+            items(items = news) { item ->
+                NewsItem(
+                    news = item,
+                    onNewsClick = onNewsClick,
+                    onBookmarkClick = { /* implement bookmark click */ })
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    color = Color.LightGray
+                )
+            }
         }
     }
 }
+
 
 @Composable
 fun NewsItem(news: News, onNewsClick: (String) -> Unit, onBookmarkClick: () -> Unit) {
@@ -291,3 +317,29 @@ fun SavedNewsList(news: List<News>, onNewsClick: (String) -> Unit) {
         }
     }
 }
+
+@Composable
+fun SearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onSearch: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TextField(
+            value = query,
+            onValueChange = onQueryChange,
+            modifier = Modifier
+                .weight(1f)
+        )
+        Button(onClick = onSearch) {
+            Text("Search")
+        }
+    }
+}
+
+
