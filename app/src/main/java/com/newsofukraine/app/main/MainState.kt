@@ -1,4 +1,4 @@
-package com.newsofukraine.app
+package com.newsofukraine.app.main
 
 import com.newsofukraine.domain.model.News
 

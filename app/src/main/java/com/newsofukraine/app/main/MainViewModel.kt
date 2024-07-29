@@ -1,7 +1,5 @@
-package com.newsofukraine.app
+package com.newsofukraine.app.main
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.newsofukraine.domain.model.News

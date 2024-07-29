@@ -1,6 +1,6 @@
 package com.newsofukraine.di
 
-import com.newsofukraine.app.MainViewModel
+import com.newsofukraine.app.main.MainViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
