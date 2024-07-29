@@ -22,7 +22,7 @@ class RemoteRepoImplementation : RemoteRepo {
         val retrofit = getRetrofit()
         val newsApiService = retrofit.create(NewsApiService::class.java)
 
-        val response = newsApiService.getNews("ua", apiKey)
+        val response = newsApiService.getNews(country = "ua", apiKey = apiKey)
         Log.d("API_or_UI_Debug", "API response received")
 
         if (response.isSuccessful && response.body() != null) {
@@ -51,6 +51,28 @@ class RemoteRepoImplementation : RemoteRepo {
             )
             return emptyList()
         }
+    }
+
+    override suspend fun searchNews(query: String): List<News> {
+        val retrofit = getRetrofit()
+        val newsApiService = retrofit.create(NewsApiService::class.java)
+        val response = newsApiService.searchNews(query, apiKey = apiKey, country = "ua")
+        val allNews = response.body()?.articles
+
+        val returnList: MutableList<News> = mutableListOf()
+        allNews?.forEach {
+            returnList.add(
+                News(
+                    title = it.title,
+                    urlToImage = it.urlToImage ?: "",
+                    author = it.author ?: "Unknown",
+                    description = it.description ?: "",
+                    url = it.url
+                )
+            )
+        }
+        return returnList
+
     }
 }
 
