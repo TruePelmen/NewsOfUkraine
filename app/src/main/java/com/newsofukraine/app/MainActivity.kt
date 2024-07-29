@@ -163,6 +163,10 @@ fun MainScreen(
             is MainState.SavedNewsList -> {
                 NewsList(news = (state as MainState.SavedNewsList).news, onNewsClick = onNewsClick)
             }
+
+            is MainState.SearchedNewsList -> {
+                NewsList(news = (state as MainState.SearchedNewsList).news, onNewsClick = onNewsClick)
+            }
         }
     }
 }

@@ -51,7 +51,7 @@ class MainViewModel(
             _state.value = MainState.Loading
             try {
                 val newsList = searchNewsUseCase.invoke(query)
-                _state.value = MainState.NewsList(newsList)
+                _state.value = MainState.SearchedNewsList(query, newsList)
             } catch (e: Exception) {
                 _state.value = MainState.Error(e.message ?: "Unknown error")
             }

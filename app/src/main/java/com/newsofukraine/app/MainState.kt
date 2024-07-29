@@ -7,5 +7,5 @@ sealed class MainState {
     data class NewsList(val news: List<News>) : MainState()
     data class Error(val error: String?) : MainState()
     data class SavedNewsList(val news: List<News>) : MainState()
-    data class SearchedNewsList(val query: String, val news: List<News>)
+    data class SearchedNewsList(val query: String, val news: List<News>): MainState()
 }
